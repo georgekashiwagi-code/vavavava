@@ -30,19 +30,22 @@ def send():
         return "ERR", 400
 
     with lock:
-        messages.append({
+        item = {
             "id": next_id,
             "name": name,
             "player_id": player_id,
             "message": message,
             "time": int(time.time())
-        })
+        }
+
+        messages.append(item)
+        current_id = next_id
         next_id += 1
 
         if len(messages) > MAX_MESSAGES:
             del messages[:-MAX_MESSAGES]
 
-    return "OK"
+    return "OK|" + str(current_id)
 
 @app.route("/poll", methods=["GET"])
 def poll():
